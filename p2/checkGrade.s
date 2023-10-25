@@ -23,12 +23,14 @@ main:
    LDR r1, =grade
    LDR r1, [r1, #0]
    LDR r2, =name
+   MOV r0, r1
+   MOV r1, r2
    BL checkGrade
 
    # Return to the OS
-   ldr lr, [sp, #0]
-   add sp, sp, #4
-   mov pc, lr
+   LDR lr, [sp, #0]
+   ADD sp, sp, #4
+   MOV pc, lr
 
 .data
    grade: .word 0
@@ -43,8 +45,11 @@ main:
 .text
 checkGrade:
    # Push
-   SUB sp, sp, #4
+   SUB sp, sp, #12
    STR lr, [sp, #0]
+   STR r4, [sp, #4]
+   STR r5, [sp, #8]
+
 
 
    MOV r4, r0
@@ -75,7 +80,7 @@ checkGrade:
    BLT grade_B
       # Code block for grade of A
       LDR r0, =GradeA
-      LDR r1, r5
+      MOV r1, r5
       BL printf
       B EndIf
    grade_B:
@@ -84,7 +89,7 @@ checkGrade:
    BLT grade_C
       # Code block for grade of B
       LDR r0, =GradeB
-      LDR r1, r5
+      MOV r1, r5
       BL printf
       B EndIf
    grade_C:
@@ -93,21 +98,23 @@ checkGrade:
    BLT Else
       # Code block for grade of C
       LDR r0, =GradeC
-      LDR r1, r5
+      MOV r1, r5
       BL printf
       B EndIf
    Else:
       # Code block for grade of F
       LDR r0, =GradeF
-      LDR r1, r5
+      MOV r1, r5
       BL printf
       B EndIf
    EndIf:
 
    # Pop
-   ldr lr, [sp, #0]
-   add sp, sp, #4
-   mov pc, lr
+   LDR lr, [sp, #0]
+   LDR r4, [sp, #4]
+   LDR r5, [sp, #8]
+   ADD sp, sp, #4
+   MOV pc, lr
 
 .data
    GradeA: .asciz "%s got an A\n"
