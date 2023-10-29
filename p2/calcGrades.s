@@ -1,53 +1,61 @@
 #
-# Program name: template.s
+# Program name: calcGrades.s
 # Author: Jack Kurowski
-# Date:9/17/2023
-# Purpose: This program outputs what a user
+# Date: 10/29/2023
+# Purpose: This program outputs what a user entered for a student
+# test and the grade they got
 #
 .text
 .global main
 main:
 
-# Save return to os on stack
-SUB sp, sp, #4
-STR lr, [sp, #0]
+   # Save return to os on stack
+   SUB sp, sp, #4
+   STR lr, [sp, #0]
 
-# Prompt For An Input
-ldr r0, =prompt1
-bl  printf
+   # Prompt For An Input
+   LDR r0, =prompt1
+   BL  printf
 
-#Scanf
-ldr r0, =input1
-ldr r1, =grade
-ldr r2, =name
-bl scanf
+   #Scanf
+   LDR r0, =input1
+   LDR r1, =grade
+   LDR r2, =name
+   BL scanf
 
-b jump
-   bl checkGrade
-jump:
+   BL checkGrade
 
+   # Printing The Message
+   LDR r0, =format1
+   LDR r1, =grade
+   LDR r1, [r1, #0]
+   LDR r2, =name
+   MOV r0, r1
+   MOV r1, r2
+   BL checkGrade 
 
-# Printing The Message
-ldr r0, =format1
-ldr r1, =grade
-ldr r1, [r1, #0]
-ldr r2, =name
-#bl printf
-mov r0, r1
-mov r1, r2
-bl checkGrade 
-
-# Return to the OS
-LDR lr, [sp, #0]
-ADD sp, sp, #4
-MOV pc, lr
+   # Return to the OS
+   LDR lr, [sp, #0]
+   ADD sp, sp, #4
+   MOV pc, lr
 
 .data
-grade: .word 0
-prompt1: .asciz "Enter your grade and name\n"
-input1: .asciz "%d %s"
-format1: .asciz "Your grade is %d and name is %s \n"
-name: .asciz ""
+   grade: .word 0
+   prompt1: .asciz "Enter your grade and name\n"
+   input1: .asciz "%d %s"
+   format1: .asciz "Your grade is %d and name is %s \n"
+   name: .asciz ""
+#End main
+
+
+# Function checkGrade
+# checkGrade takes a number and name input and prints out the student
+# name and what grade they got
+# Inputs:
+#    r0 - grade
+#    r1 - name
+# Outputs:
+#    no outputs - print info only
 
 
 .text
@@ -60,30 +68,30 @@ checkGrade:
    STR r4, [sp, #4]
    STR r5, [sp, #8]
 
-
-
+   # Store inputs in other regs
    MOV r4, r0
    MOV r5, r1
-
-
  
    #if block
-   #check 0 <= r4 <= 100
+   #check grade is at least zero
    MOV r1, #0
    MOV r0, #0
    CMP r4, r0
    MOVGE r1, #1
 
+   # Check grade is bounded by 100
    MOV r2, #0
    MOV r0, #100
    CMP r4, r0
    MOVLE r2, #1
 
+   # and to see if 0 <= r4 <= 100
    AND r1, r1, r2
    MOV r2, #1
    CMP r1, r2
-   BEQ grade_A // Grade is valid
-      # Code block for Invalid Grade
+
+   BEQ grade_A 
+      # bad entry
       LDR r0, =BadInput
       BL printf
       B EndIf
@@ -91,7 +99,7 @@ checkGrade:
    MOV r0, #90
    CMP r4, r0
    BLT grade_B
-      # Code block for grade of A    
+      # blockA    
       LDR r0, =az
       MOV r1, r5
       BL printf
@@ -100,7 +108,7 @@ checkGrade:
    MOV r0, #80
    CMP r4, r0
    BLT grade_C
-      # Code block for grade of B
+      #blockB
       LDR r0, =bz
       MOV r1, r5
       BL printf
@@ -109,13 +117,13 @@ checkGrade:
    MOV r0, #70
    CMP r4, r0
    BLT Else
-      # Code block for grade of C
+      # blockC
       LDR r0, =cz
       MOV r1, r5
       BL printf
       B EndIf
    Else:
-      # Code block for grade of F
+      # blockF
       LDR r0, =fz
       MOV r1, r5
       BL printf
@@ -140,5 +148,6 @@ checkGrade:
    fz: .asciz "%s got an F\n"
    BadInput: .asciz "You must enter a valid grade (a number between 0 and 100, inclusive)\n"
 
+# end checkGrade
 
 

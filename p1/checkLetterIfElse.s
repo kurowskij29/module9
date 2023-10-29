@@ -2,7 +2,7 @@
 # FileName: libConversions.s
 # Author: Jack Kurowski
 # Date: 10/23/2023
-# Purpose: Check letter using boolean vars
+# Purpose: Check letter without using boolean variables
 #
 # Functions:
 # main
@@ -16,6 +16,7 @@
 .text
 
 main:
+   #push
    SUB sp, sp, #4
    STR lr, [sp, #0]
 
@@ -23,15 +24,17 @@ main:
    LDR r0, =prompt1
    BL printf
 
-   #Scanf
+   #Store input letter
    LDR r0, =input1
    LDR r1, =userVal
    BL scanf
+
+   #Put letter in correct reg for BL
    LDR r0, =userVal
    LDR r0, [r0, #0]
-
    BL checkLetter
 
+   #pop
    LDR lr, [sp, #0]
    ADD sp, sp, #4
    MOV pc, lr
@@ -40,7 +43,6 @@ main:
    prompt1: .asciz "Enter a character:\n"
    userVal: .word 0
    input1: .asciz "%1s"
-
 
 # End main
 
@@ -57,6 +59,7 @@ checkLetter:
    BLT else1
 
       #start if1 block
+
       # check if input is less than or equal to z
       MOV r5, #0
       MOV r1, #0x5A
@@ -66,7 +69,6 @@ checkLetter:
          LDR r0, =outputLetter
          B endIf2
          #end if2 block
-        
       else2:
          # start else2 block
 
@@ -99,22 +101,18 @@ checkLetter:
          else3:
             # else3 block
             LDR r0, =outputNot
-
-         #end else3 block
+            #end else3 block
          endIf3:
 
       # end else2 block
       endIf2:
 
-
    # end if1 block
    B endIf1
-
 
    else1:
       # else1 block
       LDR r0, =outputNot
-
 
    endIf1:
 

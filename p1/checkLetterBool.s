@@ -1,5 +1,5 @@
 
-# FileName: libConversions.s
+# FileName: checkLetterBool.s
 # Author: Jack Kurowski
 # Date: 10/23/2023
 # Purpose: Check letter using boolean vars
@@ -16,6 +16,7 @@
 .text
 
 main:
+   # push
    SUB sp, sp, #4
    STR lr, [sp, #0]
 
@@ -32,6 +33,7 @@ main:
 
    BL checkLetter
 
+   #pop
    LDR lr, [sp, #0]
    ADD sp, sp, #4
    MOV pc, lr

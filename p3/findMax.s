@@ -1,4 +1,12 @@
 
+# Program Name: findMax.s
+# Author:       Jack Kurowski
+# Date:         10/29/2023 
+# Purpose:      Find the max of 3 user entered values and print the max value
+# Functions:
+#               main
+#               getMax
+
 .text
 .global main
 
@@ -11,7 +19,7 @@ main:
    LDR r0, =prompt1
    BL printf
 
-   #Scanf
+   #Load all 3 values
    LDR r0, =input1
    LDR r1, =val1
    LDR r2, =val2
@@ -47,11 +55,26 @@ main:
    output1: .asciz "The largest of the numbers you entered is: %d\n"
 
 
-######################################################
+# end main
+
+
+
+# getMax
+# Purpose: This function finds the max of 3 numbers
+# Inputs:
+#          r0 - value1
+#          r1 - value2
+#          r2 - value3
+# Outputs:
+#          r0 - highest value
+
+
+
 .text
 .global getMax
 
 getMax:
+
    #push 
    SUB sp, sp, #4
    STR lr, [sp, #0]
@@ -61,11 +84,11 @@ getMax:
    MOV r2, r1  
    MOV r1, r0
 
-
-
+   # compare val1 and val2
    CMP r1, r2
    BLT else1
       #if1 block
+      # compare val1 and val3
       CMP r1, r3
       BLT else2
          #if2 block
@@ -79,6 +102,7 @@ getMax:
       B endif1
    else1:
       #else1 block
+      # compare val2 and val3
       CMP r2, r3
       BLT else3
          #if3 block
@@ -96,3 +120,6 @@ getMax:
    MOV pc, lr
 
 .data 
+
+
+# end getMax
