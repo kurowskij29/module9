@@ -23,8 +23,6 @@ main:
    LDR r2, =name
    BL scanf
 
-   BL checkGrade
-
    # Printing The Message
    LDR r0, =format1
    LDR r1, =grade
